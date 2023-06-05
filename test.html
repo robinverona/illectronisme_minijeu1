@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matter.js Example</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.17.1/matter.js"></script>
+  <script>
+    // Création du moteur Matter.js
+    var Engine = Matter.Engine,
+      Render = Matter.Render,
+      World = Matter.World,
+      Bodies = Matter.Bodies;
+
+    var engine = Engine.create();
+
+    // Création du rendu
+    var render = Render.create({
+      element: document.body,
+      engine: engine,
+      options: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        wireframes: false
+      }
+    });
+
+    Render.run(render);
+
+    // Ajout de la gravité
+    var gravityY = 0.5;
+    engine.world.gravity.y = gravityY;
+
+    // Création des objets SVG
+    var createFallingSVG = function (x, y, svgPath) {
+      var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      svgElement.setAttribute("d", svgPath);
+
+      var svgRender = Bodies.fromVertices(x, y, Matter.Svg.pathToVertices(svgElement), {
+        render: {
+          sprite: {
+            texture: svgPath,
+            xScale: 0.5,
+            yScale: 0.5
+          }
+        }
+      }, true);
+
+      return svgRender;
+    };
+
+    // Génération aléatoire des objets SVG
+    var generateRandomSVG = function () {
+      var svgPaths = [
+        "M40 20 C40 30 50 40 50 50 C50 60 40 70 30 70 C20 70 10 60 10 50 C10 40 20 30 30 30 C30 20 40 10 40 10",
+        "M20 20 L20 80 L80 80 L80 20 Z"
+        // Ajoutez ici plus de chemins SVG si vous le souhaitez
+      ];
+
+      var randomX = Math.random() * window.innerWidth;
+      var randomSVGPath = svgPaths[Math.floor(Math.random() * svgPaths.length)];
+
+      var fallingSVG = createFallingSVG(randomX, -30, randomSVGPath);
+      World.add(engine.world, fallingSVG);
+    };
+
+    // Génération périodique des objets SVG
+    setInterval(function () {
+      generateRandomSVG();
+    }, 1000);
+
+    // Exécution du moteur Matter.js
+    Engine.run(engine);
+  </script>
+</body>
+
+</html>
+
+Ce code crée une fenêtre HTML où des objets SVG tombent du haut de l'écran. Vous pouvez ajouter plus de chemins SVG à la variable svgPaths pour générer différents types d'objets.
