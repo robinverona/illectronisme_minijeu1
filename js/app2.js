@@ -134,9 +134,9 @@ function createSvgBodies() {
         frictionAir: 0.00001,
         restitution: 0.8,
         render: {
-          fillStyle: "#464655",
-          strokeStyle: "#464655",
-          lineWidth: 1
+          // fillStyle: "#464655",
+          // strokeStyle: "#464655",
+          // lineWidth: 1
         }
       }
     );
